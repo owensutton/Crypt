@@ -1,9 +1,13 @@
-CryptSym
+**Crypt**
 
-Version 1.00
+**Version 1.01**
 
-Description:
+**Description:** 
+
+Random Password Generator. Generates a random password based off of an inputted number. 
 
 
 
-How to use:
+**How to use:**
+
+**Random Password Generator:** Select option 1 then provide length of password you wish to create. 
