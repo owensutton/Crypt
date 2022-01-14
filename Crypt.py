@@ -65,6 +65,7 @@ while True:
             while True:
                 length = input("What would you like the length of the password to be?:\n")
                 try:
+                    # Generate password
                     Password = GenRanPassword(int(length))
                     print("Password = " + str(Password))
                     break
