@@ -12,6 +12,7 @@
 # 1.01        Owen Sutton   01/11/2022       New Program
 # 1.01        Owen Sutton   01/13/2022       Completed random password generator Added. Started work on Message Encryption.
 # 1.02        Owen Sutton   01/18/2022       Completed work on message encryption and developed path for Message Decryption.
+# 1.03        Owen Sutton   01/18/2022       Completed work for encrypting and decrypting a file.
 #
 
 
@@ -30,6 +31,8 @@ Email: Owensutton7@gmail.com
 
 """)
 
+import os
+import sys
 import random
 import string
 from cryptography.fernet import Fernet
@@ -57,7 +60,7 @@ def GenRanPassword(PLength):
 
 
 while True:
-    option = input("Do you wish to generate a random password? Encrypt a file or text? or decrypt a file or text?:\n\n1 - Generate random Password\n2 - Encrypt File\n3 - Decrypt File\nEnter choice here: ")
+    option = input("Do you wish to generate a random password? Encrypt a file or text? or decrypt a file or text?:\n\n1 - Generate random Password\n2 - Encrypt\n3 - Decrypt\nEnter choice here: ")
     try:
         option_Int = int(option)
         if option_Int == 1:
@@ -92,6 +95,29 @@ while True:
                         break
 
                     elif eoption_int == 2:
+                        print("Note the file you wish to have encrypted should be placed in the 'encrypt_file' folder. ")
+                        efile = input("What is the name of the file you wish to encrypt? \nEnter Here: ")
+
+                        ef = Fernet.generate_key()
+                        ef2 = Fernet(ef)
+
+                        # move working directory to the encrypt_file folder
+                        cwd = os.getcwd()
+                        os.chdir(os.path.join(cwd, "encrypt_file"))
+                        files = os.listdir()
+
+                        with open(str(efile), 'rb') as file:
+                            original = file.read()
+
+                        encrypted = ef2.encrypt(original)
+
+                        with open(str(efile), 'wb') as encrypted_file:
+                            encrypted_file.write(encrypted)
+
+                        print("Contents of the file have been encrypted successfully.")
+                        print("Your private key is: ", ef)
+                        print("Don't lose your private key, you won't be able to decrypt the file without it.")
+
                         break
 
                     else:
@@ -106,7 +132,7 @@ while True:
                 IntMess = int(MessageorFile)
                 try:
                     if IntMess == 1:
-                        print("You have choosen to decrypt a message or file!")
+                        print("You have chosen to decrypt a message!")
                         GetEmessage = input("What is the encrypted text? \nEnter Here: ")
                         GetRanKey = input("What is your key? \nEnter Here: ")
 
@@ -122,6 +148,28 @@ while True:
                         break
 
                     elif IntMess == 2:
+                        print("You have chosen to decrypt a file!")
+
+                        getefile = input("What is the encrypted file? \nNote: file must be located in the encrypt_file folder\nEnter Here: ")
+                        getpkey = input("What is the private key?\n Enter Here: ")
+
+                        pkey = str.encode(str(getpkey))
+                        dec = Fernet(pkey)
+
+                        # Move active directory to the encrypt file folder
+                        cwd = os.getcwd()
+                        os.chdir(os.path.join(cwd, "encrypt_file"))
+                        files = os.listdir()
+
+                        with open(str(getefile), 'rb') as enc_file:
+                            encrypted_stuff = enc_file.read()
+
+                        decrypt_stuff = dec.decrypt(encrypted_stuff)
+
+                        with open(str(getefile), 'wb') as dec_file:
+                            dec_file.write(decrypt_stuff)
+
+                        print("File successfully decrypted!")
 
                         break
                     else:
@@ -136,10 +184,4 @@ while True:
 
     except:
         print("Invalid input entered, please try again!")
-
-
-
-# places key into filekey file.
-#with open('filekey.key', 'wb') as filekey:
- #   filekey.write(key)
 
