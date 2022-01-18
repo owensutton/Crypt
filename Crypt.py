@@ -10,9 +10,8 @@
 # Version #   Developer     Date of Change   Description of Change
 # ---------   -----------   --------------   ----------------------
 # 1.01        Owen Sutton   01/11/2022       New Program
-# 1.01        Owen Sutton   01/13/2022       Completed random password generator Added. Started work on Message
-#                                            Encryption
-#
+# 1.01        Owen Sutton   01/13/2022       Completed random password generator Added. Started work on Message Encryption.
+# 1.02        Owen Sutton   01/18/2022       Completed work on message encryption and developed path for Message Decryption.
 #
 
 
@@ -58,7 +57,7 @@ def GenRanPassword(PLength):
 
 
 while True:
-    option = input("Do you wish to generate a random password? Encrypt a file or text? or decrypt a file or text?:\n\n1 - Generate random key\n2 - Encrypt File\n3 - Decrypt File\nEnter choice here: ")
+    option = input("Do you wish to generate a random password? Encrypt a file or text? or decrypt a file or text?:\n\n1 - Generate random Password\n2 - Encrypt File\n3 - Decrypt File\nEnter choice here: ")
     try:
         option_Int = int(option)
         if option_Int == 1:
@@ -82,23 +81,54 @@ while True:
                         # get message to be encrypted
                         message = input("What message would you like to encrypt?\nEnter choice here: ")
                         # generate random key
-                        pk = GenRanKey()
+                        pk = Fernet.generate_key()
+                        pk2 = Fernet(pk)
                         print("Your randomly generated key is = " + str(pk))
                         # encrypt the message
-                        emessage = pk.encrypt(str(message))
-                        print(emessage)
+                        emessage = pk2.encrypt(message.encode())
+                        print("Original message: ", message)
+                        print("Encrypted message: ", emessage)
+                        print("Note, you will need the random generate key to be able to decrypt the message. Don't lose it!")
                         break
 
                     elif eoption_int == 2:
                         break
 
                     else:
-                        print("Invalide input entered, please try again!")
+                        print("Invalid input entered, please try again!")
                 except:
-                    print("Invalide input entered, please try again!")
+                    print("Invalid input entered, please try again!")
 
             break
         elif option_Int == 3:
+            MessageorFile = input("Would you like to decrypt a message or file?\n1 - Message\n2 - File\n Enter Here: ")
+            while True:
+                IntMess = int(MessageorFile)
+                try:
+                    if IntMess == 1:
+                        print("You have choosen to decrypt a message or file!")
+                        GetEmessage = input("What is the encrypted text? \nEnter Here: ")
+                        GetRanKey = input("What is your key? \nEnter Here: ")
+
+                        a = str.encode(str(GetRanKey))
+                        x = Fernet(a)
+
+                        y = str.encode(str(GetEmessage))
+
+                        decryptedmessage = x.decrypt(y).decode()
+
+                        print("Decrypted message: ", decryptedmessage)
+
+                        break
+
+                    elif IntMess == 2:
+
+                        break
+                    else:
+                        print("Invalid input entered, please try again!")
+                        break
+                except:
+                    print("Invalid input entered, please try again!")
 
             break
         else:
